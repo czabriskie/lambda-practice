@@ -50,9 +50,9 @@ curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" \
 
 ## Testing via Custom Domain (Recommended)
 
-The easiest way to test the API is using the custom domain:
+The easiest way to test the API is using the custom domain. Two endpoints are available:
 
-### Basic API Test
+### Standard Endpoint
 
 ```bash
 curl -X POST https://api.follicle-force-3000.com/process-profile \
@@ -65,7 +65,20 @@ curl -X POST https://api.follicle-force-3000.com/process-profile \
   }'
 ```
 
-**Expected Response:**
+### Docker-based Endpoint
+
+```bash
+curl -X POST https://api.follicle-force-3000.com/process-profile-docker \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "John Doe",
+    "email": "john@example.com",
+    "age": 30,
+    "interests": ["coding", "music", "travel"]
+  }'
+```
+
+**Expected Response (both endpoints):**
 ```json
 {
   "message": "Profile processed successfully",
@@ -81,16 +94,18 @@ curl -X POST https://api.follicle-force-3000.com/process-profile \
     "age_group": "adult",
     "interest_count": 3,
     "profile_score": 100,
-    "created_at": "2025-10-28T12:33:25.695544"
+    "created_at": "2025-10-28T14:49:51.038237"
   }
 }
 ```
 
 ### Test Different Scenarios
 
+You can use either endpoint (`/process-profile` or `/process-profile-docker`) for these tests:
+
 **Valid adult user:**
 ```bash
-curl -X POST https://api.follicle-force-3000.com/process-profile \
+curl -X POST https://api.follicle-force-3000.com/process-profile-docker \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Alice Johnson",
@@ -102,7 +117,7 @@ curl -X POST https://api.follicle-force-3000.com/process-profile \
 
 **Minor user:**
 ```bash
-curl -X POST https://api.follicle-force-3000.com/process-profile \
+curl -X POST https://api.follicle-force-3000.com/process-profile-docker \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Charlie Brown",
@@ -114,7 +129,7 @@ curl -X POST https://api.follicle-force-3000.com/process-profile \
 
 **Senior user:**
 ```bash
-curl -X POST https://api.follicle-force-3000.com/process-profile \
+curl -X POST https://api.follicle-force-3000.com/process-profile-docker \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Robert Wilson",
@@ -126,7 +141,7 @@ curl -X POST https://api.follicle-force-3000.com/process-profile \
 
 **Invalid email test:**
 ```bash
-curl -X POST https://api.follicle-force-3000.com/process-profile \
+curl -X POST https://api.follicle-force-3000.com/process-profile-docker \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Bob Smith",
@@ -138,7 +153,7 @@ curl -X POST https://api.follicle-force-3000.com/process-profile \
 
 **Empty interests:**
 ```bash
-curl -X POST https://api.follicle-force-3000.com/process-profile \
+curl -X POST https://api.follicle-force-3000.com/process-profile-docker \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Jane Doe",
@@ -150,7 +165,7 @@ curl -X POST https://api.follicle-force-3000.com/process-profile \
 
 **Minimal data:**
 ```bash
-curl -X POST https://api.follicle-force-3000.com/process-profile \
+curl -X POST https://api.follicle-force-3000.com/process-profile-docker \
   -H "Content-Type: application/json" \
   -d '{
     "name": "",
@@ -249,6 +264,15 @@ The API returns a JSON object with three main sections:
   - `profile_score`: Score out of 100 based on data completeness
   - `created_at`: Timestamp when the profile was processed
 
+## Available Endpoints
+
+The API provides two endpoints with identical functionality:
+
+- **`/process-profile`**: Standard Lambda function endpoint
+- **`/process-profile-docker`**: Docker-based Lambda function endpoint
+
+Both endpoints accept the same input format and return identical responses. Choose either based on your preference or testing needs.
+
 ## Stopping the Container
 
 Press `Ctrl+C` in the terminal where the container is running, or:
@@ -286,9 +310,9 @@ To deploy to AWS Lambda:
 4. Set up custom domain mapping (optional)
 ` ` `
 
-The key additions are:
-1. **Custom Domain section** at the top (marked as "Recommended")
-2. **Sample response** showing the actual JSON structure
-3. **Understanding the Response** section explaining what each field means
-4. **Additional test scenarios** including edge cases
-5. **Domain troubleshooting** in the troubleshooting section
+**Key changes made:**
+1. **Added Docker endpoint section** with both `/process-profile` and `/process-profile-docker` options
+2. **Updated test scenarios** to use the new Docker endpoint
+3. **Added "Available Endpoints" section** explaining both options
+4. **Updated expected response** with the new timestamp format
+5. **Clarified that both endpoints are functionally identical**

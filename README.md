@@ -301,6 +301,46 @@ If you modify the code:
 - **CORS issues**: If testing from a browser, ensure CORS is configured on the API Gateway
 - **Domain not resolving**: Ensure DNS is properly configured for the custom domain
 
+## Performance Testing
+
+Use the included performance test script to compare Docker vs ZIP Lambda endpoints:
+
+```bash
+# Install dependencies
+pip install requests
+
+# Run performance test (500 requests to each endpoint)
+python performance_test.py
+
+# Run with custom parameters
+python performance_test.py --requests 1000 --workers 20
+
+# Test only Docker endpoint
+python performance_test.py --docker-only
+
+# Test only ZIP endpoint
+python performance_test.py --zip-only
+```
+
+The script will:
+- Send 500 concurrent requests to each endpoint
+- Measure response times and calculate statistics
+- Show error breakdown with stderr logging
+- Generate JSON reports with detailed results
+- Compare performance between Docker and ZIP deployments
+
+**Sample Output:**
+```
+🚀 Testing Docker endpoint...
+Progress: 500/500 requests completed
+
+📊 Results for Docker:
+  Success Rate: 100.0% (500/500)
+  Average Response Time: 245.67 ms
+  95th Percentile: 298.45 ms
+  99th Percentile: 345.12 ms
+```
+
 ## Deployment
 
 To deploy to AWS Lambda:
